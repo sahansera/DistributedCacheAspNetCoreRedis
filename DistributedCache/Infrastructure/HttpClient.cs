@@ -40,7 +40,7 @@ namespace DistributedCache.Infrastructure
             {
                 await using var responseStream = await response.Content.ReadAsStreamAsync();
                 var usersResponse = await JsonSerializer.DeserializeAsync<UserResponse>(responseStream);
-                var users = usersResponse.Data;
+                var users = usersResponse?.Data;
                 return users;
             }
             else

@@ -10,6 +10,7 @@ namespace DistributedCache.Services
 {
     public class CachedUserService : IUsersService
     {
+        private const int CacheTimeToLive = 120;
         private readonly UsersService _usersService;
         private readonly ICacheProvider _cacheProvider;
 
@@ -34,15 +35,15 @@ namespace DistributedCache.Services
             try
             {
                 await semaphore.WaitAsync();
-                users = await _cacheProvider.GetFromCache<IEnumerable<User>>(cacheKey); // Recheck to make sure it didn't populate before entering semaphore
-                if (users != null)
-                {
-                    return users;
-                }
+                
+                // Recheck to make sure it didn't populate before entering semaphore
+                users = await _cacheProvider.GetFromCache<IEnumerable<User>>(cacheKey);
+                if (users != null) return users;
+                
                 users = await func();
                 
                 var cacheEntryOptions = new DistributedCacheEntryOptions()
-                    .SetSlidingExpiration(TimeSpan.FromSeconds(120)); 
+                    .SetSlidingExpiration(TimeSpan.FromSeconds(CacheTimeToLive)); 
                 
                 await _cacheProvider.SetCache(cacheKey, users, cacheEntryOptions);
             }

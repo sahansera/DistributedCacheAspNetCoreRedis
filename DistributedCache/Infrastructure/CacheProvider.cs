@@ -1,8 +1,6 @@
-using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace DistributedCache.Infrastructure
 {
@@ -26,10 +24,7 @@ namespace DistributedCache.Infrastructure
         public async Task<T> GetFromCache<T>(string key) where T : class
         {
             var cachedResponse = await _cache.GetStringAsync(key);
-            if (cachedResponse == null) return null;
-            var tmp = JsonSerializer.Deserialize<T>(cachedResponse);
-            return tmp;
-
+            return cachedResponse == null ? null : JsonSerializer.Deserialize<T>(cachedResponse);
         }
 
         public async Task SetCache<T>(string key, T value, DistributedCacheEntryOptions options) where T : class

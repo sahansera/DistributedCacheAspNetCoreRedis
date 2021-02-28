@@ -28,11 +28,14 @@ namespace DistributedCache
         {
             services.AddControllersWithViews();
             services.AddHttpClient();
+            
+            // Register the RedisCache service
             services.AddStackExchangeRedisCache(options =>
             {
                 options.Configuration = Configuration.GetSection("Redis")["ConnectionString"];
             });
             
+            // Services from our previos tutorial
             services.AddScoped<UsersService>();
             services.AddScoped<IUsersService, CachedUserService>();
             services.AddScoped<ICacheService, CacheService>();
