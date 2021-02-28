@@ -9,7 +9,7 @@ namespace DistributedCache.Infrastructure
     {
         Task<T> GetFromCache<T>(string key) where T : class;
         Task SetCache<T>(string key, T value, DistributedCacheEntryOptions options) where T : class;
-        void ClearCache(string key);
+        Task ClearCache(string key);
     }
     
     public class CacheProvider : ICacheProvider
@@ -23,19 +23,19 @@ namespace DistributedCache.Infrastructure
         
         public async Task<T> GetFromCache<T>(string key) where T : class
         {
-            var cachedResponse = await _cache.GetStringAsync(key);
-            return cachedResponse == null ? null : JsonSerializer.Deserialize<T>(cachedResponse);
+            var cachedUsers = await _cache.GetStringAsync(key);
+            return cachedUsers == null ? null : JsonSerializer.Deserialize<T>(cachedUsers);
         }
 
         public async Task SetCache<T>(string key, T value, DistributedCacheEntryOptions options) where T : class
         {
-            var response = JsonSerializer.Serialize(value);
-            await _cache.SetStringAsync(key, response , options);
+            var users = JsonSerializer.Serialize(value);
+            await _cache.SetStringAsync(key, users , options);
         }
 
-        public void ClearCache(string key)
+        public async Task ClearCache(string key)
         {
-            _cache.Remove(key);
+            await _cache.RemoveAsync(key);
         }
     }
 }

@@ -8,23 +8,23 @@ using Microsoft.Extensions.Caching.Distributed;
 
 namespace DistributedCache.Services
 {
-    public class CachedUserService : IUsersService
+    public class CachedUserService : IUserService
     {
         private const int CacheTimeToLive = 120;
-        private readonly UsersService _usersService;
+        private readonly UserService _userService;
         private readonly ICacheProvider _cacheProvider;
 
         private static readonly SemaphoreSlim GetUsersSemaphore = new(1, 1);
         
-        public CachedUserService(UsersService usersService, ICacheProvider cacheProvider)
+        public CachedUserService(UserService userService, ICacheProvider cacheProvider)
         {
-            _usersService = usersService;
+            _userService = userService;
             _cacheProvider = cacheProvider;
         }
         
         public async Task<IEnumerable<User>> GetUsersAsync()
         {
-            return await GetCachedResponse(CacheKeys.Users, GetUsersSemaphore, () => _usersService.GetUsersAsync());
+            return await GetCachedResponse(CacheKeys.Users, GetUsersSemaphore, () => _userService.GetUsersAsync());
         }
 
         private async Task<IEnumerable<User>> GetCachedResponse(string cacheKey, SemaphoreSlim semaphore, Func<Task<IEnumerable<User>>> func)

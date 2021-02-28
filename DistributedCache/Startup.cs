@@ -36,9 +36,9 @@ namespace DistributedCache
             });
             
             // Services from our previos tutorial
-            services.AddScoped<UsersService>();
-            services.AddScoped<IUsersService, CachedUserService>();
-            services.AddScoped<ICacheService, CacheService>();
+            services.AddScoped<UserService>();
+            services.AddScoped<IUserService, CachedUserService>();
+            services.AddScoped<ICacheUserService, CacheUserService>();
             services.AddScoped<ICacheProvider, CacheProvider>();
             services.AddScoped<IHttpClient, HttpClient>();
         }

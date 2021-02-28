@@ -6,16 +6,16 @@ using DistributedCache.Models;
 namespace DistributedCache.Services
 {
     
-    public interface IUsersService
+    public interface IUserService
     {
         Task<IEnumerable<User>>GetUsersAsync();
     }
     
-    public class UsersService : IUsersService
+    public class UserService : IUserService
     {
         private readonly IHttpClient _httpClient;
 
-        public UsersService(IHttpClient httpClient)
+        public UserService(IHttpClient httpClient)
         {
             _httpClient = httpClient;
         }

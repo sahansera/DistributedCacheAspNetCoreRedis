@@ -22,6 +22,7 @@ namespace DistributedCache.Infrastructure
     
     public class HttpClient : IHttpClient
     {
+        private const string UsersEndpoint = "https://reqres.in/api/users";
         private readonly IHttpClientFactory _clientFactory;
 
         public HttpClient(IHttpClientFactory clientFactory)
@@ -31,7 +32,7 @@ namespace DistributedCache.Infrastructure
 
         public async Task<IEnumerable<User>> Get()
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, "https://reqres.in/api/users");
+            var request = new HttpRequestMessage(HttpMethod.Get, UsersEndpoint);
             var client = _clientFactory.CreateClient();
 
             var response = await client.SendAsync(request);

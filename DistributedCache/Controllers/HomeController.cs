@@ -9,32 +9,32 @@ namespace DistributedCache.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IUsersService _usersService;
-        private readonly ICacheService _cacheService;
+        private readonly IUserService _userService;
+        private readonly ICacheUserService _cacheUserService;
 
-        public HomeController(ILogger<HomeController> logger, IUsersService usersService, ICacheService cacheService)
+        public HomeController(ILogger<HomeController> logger, IUserService userService, ICacheUserService cacheUserService)
         {
             _logger = logger;
-            _usersService = usersService;
-            _cacheService = cacheService;
+            _userService = userService;
+            _cacheUserService = cacheUserService;
         }
 
         public async Task<IActionResult> Index()
         {
-            var users = (await _cacheService.GetCachedUser())?.FirstOrDefault();
+            var users = (await _cacheUserService.GetCachedUser())?.FirstOrDefault();
             return View(users);
         }
 
         public async Task<IActionResult> CacheUserAsync()
         {
-            var users = await _usersService.GetUsersAsync();
-            var cacheEntry = users.First();
-            return View(nameof(Index), cacheEntry);
+            var users = await _userService.GetUsersAsync();
+            var cachedEntry = users.First();
+            return View(nameof(Index), cachedEntry);
         }
 
         public IActionResult CacheRemoveAsync()
         {
-            _cacheService.ClearCache();
+            _cacheUserService.ClearCache();
             return RedirectToAction(nameof(Index));
         }
     }
