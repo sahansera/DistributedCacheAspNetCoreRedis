@@ -7,6 +7,7 @@ using DistributedCache.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,6 +28,10 @@ namespace DistributedCache
         {
             services.AddControllersWithViews();
             services.AddHttpClient();
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = Configuration.GetSection("Redis")["ConnectionString"];
+            });
             
             services.AddScoped<UsersService>();
             services.AddScoped<IUsersService, CachedUserService>();

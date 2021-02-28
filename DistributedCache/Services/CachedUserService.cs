@@ -42,9 +42,9 @@ namespace DistributedCache.Services
                 users = await func();
                 
                 var cacheEntryOptions = new DistributedCacheEntryOptions()
-                    .SetSlidingExpiration(TimeSpan.FromSeconds(10)); 
+                    .SetSlidingExpiration(TimeSpan.FromSeconds(120)); 
                 
-                _cacheProvider.SetCache(cacheKey, users, cacheEntryOptions);
+                await _cacheProvider.SetCache(cacheKey, users, cacheEntryOptions);
             }
             finally
             {
