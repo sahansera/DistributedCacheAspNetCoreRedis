@@ -3,9 +3,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](#)
 [![Twitter: Sahan91](https://img.shields.io/twitter/follow/Sahan91.svg?style=social)](https://twitter.com/Sahan91)
 
-![](./Content/caching-2.jpg)
+![](https://sahansera.dev/static/f5cf079e725b11c30eb666b3ff414626/d7ceb/distributed-caching-in-aspdotnet-core-with-redis-1.png)
 
-> Demo code of blog post from [https://sahansera.dev/in-memory-caching-aspcore-dotnet/](https://sahansera.dev/in-memory-caching-aspcore-dotnet/)
+> Demo code of blog post from [https://sahansera.dev/distributed-caching-aspnet-core-redis/](https://sahansera.dev/distributed-caching-aspnet-core-redis/)
 
 ### 🏠 [Homepage](sahansera.dev)
 
