@@ -1,11 +1,16 @@
-# Welcome to Distributed Caching with ASP.NET Core 5 Tutorial 👋
+# Welcome to Distributed Caching with ASP.NET Core 6 Tutorial 👋
 [![Documentation](https://img.shields.io/badge/documentation-yes-brightgreen.svg)](sahansera.dev)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](#)
 [![Twitter: _SahanSera](https://img.shields.io/twitter/follow/_SahanSera.svg?style=social)](https://twitter.com/_SahanSera)
 
+Demo code of blog post from [https://sahansera.dev/distributed-caching-aspnet-core-redis/](https://sahansera.dev/distributed-caching-aspnet-core-redis/)
+
+> Note: I have recently migrated this project to .NET 6 and also a docker-compose.yaml for better dev experience 🎉 You can still access the old version from the [.NET 5 branch](https://github.com/sahansera/DistributedCacheAspNetCoreRedis/tree/dotnet5) in this repo. 
+
+## Architecture
+
 ![](https://sahansera.dev/static/f5cf079e725b11c30eb666b3ff414626/d7ceb/distributed-caching-in-aspdotnet-core-with-redis-1.png)
 
-> Demo code of blog post from [https://sahansera.dev/distributed-caching-aspnet-core-redis/](https://sahansera.dev/distributed-caching-aspnet-core-redis/)
 
 ### 🏠 [Homepage](sahansera.dev)
 
@@ -15,6 +20,10 @@
 
 ```sh
 Open up Visual Studio and Press F5
+
+or
+
+docker-compose up and dotnet run
 ```
 
 ## Questions? Bugs? Suggestions for Improvement?
