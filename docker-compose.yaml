@@ -1,0 +1,14 @@
+version: "3.2"
+services:
+
+ redis:
+    image: "redis:latest"
+
+    ports:
+     - "5002:6379"
+
+    volumes:
+     - $PWD/redis-data:/var/lib/redis
+
+    environment:
+     - REDIS_REPLICATION_MODE=master
