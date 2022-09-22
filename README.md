@@ -6,13 +6,23 @@
 
 ## Intro 👋
 
-Demo code of blog post from [https://sahansera.dev/distributed-caching-aspnet-core-redis/](https://sahansera.dev/distributed-caching-aspnet-core-redis/)
+This project leverages the IDistributedCache that's shipped as part of .NET/.NET Core SDKs to achieve distributed caching in a microservices environment. If you are looking for a monolithing caching approach, then, my [other project](https://github.com/sahansera/InMemoryCacheNetCore) would be more suitable for you.
+
+I've also [blogged](https://sahansera.dev/distributed-caching-aspnet-core-redis/) this with a full explanation of how this is achieved.
 
 > Note: I have recently migrated this project to .NET 6 and also a docker-compose.yaml for better dev experience 🎉 You can still access the old version from the [.NET 5 branch](https://github.com/sahansera/DistributedCacheAspNetCoreRedis/tree/dotnet5) in this repo. 
 
 ## Architecture
 
 ![](https://sahansera.dev/static/f5cf079e725b11c30eb666b3ff414626/d7ceb/distributed-caching-in-aspdotnet-core-with-redis-1.png)
+
+1. User requests a user object.
+2. App server checks if we already have a user in the cache and return the object if present.
+3. App server makes a HTTP call to retrieve the list of users.
+4. Users service returns the users list to the app server.
+5. App server sends the users list to the distributed (Redis) cache.
+6. App server gets the cached version until it expires (TTL).
+7. User gets the cached user object.
 
 ## Usage 🚀
 
