@@ -1,13 +1,12 @@
 using System.Text.Json.Serialization;
 
-namespace DistributedCache.Models
+namespace DistributedCache.Models;
+
+public class User
 {
-    public class User
-    {
-        [JsonPropertyName("id")]
-        public int Id { get; set; }
-        
-        [JsonPropertyName("email")]
-        public string Email { get; set; }
-    }
+    [JsonPropertyName("id")]
+    public int Id { get; set; }
+
+    [JsonPropertyName("email")]
+    public string Email { get; set; } = string.Empty;
 }

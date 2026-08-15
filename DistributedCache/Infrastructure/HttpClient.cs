@@ -1,53 +1,21 @@
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+using System.Net.Http.Json;
 using DistributedCache.Models;
 
-namespace DistributedCache.Infrastructure
+namespace DistributedCache.Infrastructure;
+
+public interface IUsersApiClient
 {
-    
-    public class UserResponse
+    Task<IReadOnlyList<User>> GetUsersAsync();
+}
+
+public class UsersApiClient(IHttpClientFactory clientFactory) : IUsersApiClient
+{
+    private const string UsersEndpoint = "https://jsonplaceholder.typicode.com/users";
+    private readonly IHttpClientFactory _clientFactory = clientFactory;
+
+    public async Task<IReadOnlyList<User>> GetUsersAsync()
     {
-        [JsonPropertyName("data")]
-        public User[] Data { get; set; }
-    }
-    
-    public interface IHttpClient
-    {
-        Task<IEnumerable<User>> Get();
-    }
-    
-    public class HttpClient : IHttpClient
-    {
-        private const string UsersEndpoint = "https://reqres.in/api/users";
-        private readonly IHttpClientFactory _clientFactory;
-
-        public HttpClient(IHttpClientFactory clientFactory)
-        {
-            _clientFactory = clientFactory;
-        }
-
-        public async Task<IEnumerable<User>> Get()
-        {
-            var request = new HttpRequestMessage(HttpMethod.Get, UsersEndpoint);
-            var client = _clientFactory.CreateClient();
-
-            var response = await client.SendAsync(request);
-
-            if (response.IsSuccessStatusCode)
-            {
-                await using var responseStream = await response.Content.ReadAsStreamAsync();
-                var usersResponse = await JsonSerializer.DeserializeAsync<UserResponse>(responseStream);
-                var users = usersResponse?.Data;
-                return users;
-            }
-            else
-            {
-                throw new Exception();
-            }
-        }
+        var client = _clientFactory.CreateClient();
+        return await client.GetFromJsonAsync<User[]>(UsersEndpoint) ?? [];
     }
 }

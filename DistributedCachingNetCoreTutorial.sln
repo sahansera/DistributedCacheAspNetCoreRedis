@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DistributedCache", "DistributedCache\DistributedCache.csproj", "{FEC715D7-5A5D-4021-B887-90DC276622BC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DistributedCache.Tests", "DistributedCache.Tests\DistributedCache.Tests.csproj", "{2E3BC7C6-00B4-4DC9-A7DA-4A3C11F0A10D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,17 @@ Global
 		{FEC715D7-5A5D-4021-B887-90DC276622BC}.Release|x64.Build.0 = Release|Any CPU
 		{FEC715D7-5A5D-4021-B887-90DC276622BC}.Release|x86.ActiveCfg = Release|Any CPU
 		{FEC715D7-5A5D-4021-B887-90DC276622BC}.Release|x86.Build.0 = Release|Any CPU
+		{2E3BC7C6-00B4-4DC9-A7DA-4A3C11F0A10D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E3BC7C6-00B4-4DC9-A7DA-4A3C11F0A10D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E3BC7C6-00B4-4DC9-A7DA-4A3C11F0A10D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2E3BC7C6-00B4-4DC9-A7DA-4A3C11F0A10D}.Debug|x64.Build.0 = Debug|Any CPU
+		{2E3BC7C6-00B4-4DC9-A7DA-4A3C11F0A10D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2E3BC7C6-00B4-4DC9-A7DA-4A3C11F0A10D}.Debug|x86.Build.0 = Debug|Any CPU
+		{2E3BC7C6-00B4-4DC9-A7DA-4A3C11F0A10D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E3BC7C6-00B4-4DC9-A7DA-4A3C11F0A10D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E3BC7C6-00B4-4DC9-A7DA-4A3C11F0A10D}.Release|x64.ActiveCfg = Release|Any CPU
+		{2E3BC7C6-00B4-4DC9-A7DA-4A3C11F0A10D}.Release|x64.Build.0 = Release|Any CPU
+		{2E3BC7C6-00B4-4DC9-A7DA-4A3C11F0A10D}.Release|x86.ActiveCfg = Release|Any CPU
+		{2E3BC7C6-00B4-4DC9-A7DA-4A3C11F0A10D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

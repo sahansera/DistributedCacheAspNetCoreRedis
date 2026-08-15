@@ -1,14 +1,10 @@
-version: "3.2"
 services:
-
- redis:
-    image: "redis:latest"
-
+  redis:
+    image: redis:8.8.1-alpine
     ports:
-     - "5002:6379"
-
+      - "5002:6379"
     volumes:
-     - $PWD/redis-data:/var/lib/redis
+      - redis-data:/data
 
-    environment:
-     - REDIS_REPLICATION_MODE=master
+volumes:
+  redis-data:

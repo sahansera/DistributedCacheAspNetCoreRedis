@@ -1,9 +1,5 @@
 using DistributedCache.Infrastructure;
 using DistributedCache.Services;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
@@ -12,14 +8,16 @@ builder.Services.AddHttpClient();
 
 builder.Services.AddStackExchangeRedisCache(options =>
 {
-    options.Configuration = builder.Configuration.GetSection("Redis")["ConnectionString"];
+    options.Configuration = builder.Configuration.GetConnectionString("Redis")
+        ?? throw new InvalidOperationException("Connection string 'Redis' is not configured.");
+    options.InstanceName = "DistributedCacheSample:";
 });
 
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<IUserService, CachedUserService>();
 builder.Services.AddScoped<ICacheUserService, CacheUserService>();
 builder.Services.AddScoped<ICacheProvider, CacheProvider>();
-builder.Services.AddScoped<IHttpClient, HttpClient>();
+builder.Services.AddScoped<IUsersApiClient, UsersApiClient>();
 
 var app = builder.Build();
 
