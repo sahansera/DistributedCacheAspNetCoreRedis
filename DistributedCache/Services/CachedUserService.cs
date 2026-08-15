@@ -1,58 +1,50 @@
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using DistributedCache.Infrastructure;
 using DistributedCache.Models;
 using Microsoft.Extensions.Caching.Distributed;
 
-namespace DistributedCache.Services
+namespace DistributedCache.Services;
+
+public class CachedUserService(
+    UserService userService,
+    ICacheProvider cacheProvider) : IUserService
 {
-    public class CachedUserService : IUserService
+    private const int CacheTimeToLiveInSeconds = 120;
+    private readonly UserService _userService = userService;
+    private readonly ICacheProvider _cacheProvider = cacheProvider;
+    private static readonly SemaphoreSlim GetUsersSemaphore = new(1, 1);
+
+    public Task<IReadOnlyList<User>> GetUsersAsync()
     {
-        private const int CacheTimeToLive = 120;
-        private readonly UserService _userService;
-        private readonly ICacheProvider _cacheProvider;
+        return GetCachedResponseAsync(
+            CacheKeys.Users,
+            GetUsersSemaphore,
+            _userService.GetUsersAsync);
+    }
 
-        private static readonly SemaphoreSlim GetUsersSemaphore = new(1, 1);
-        
-        public CachedUserService(UserService userService, ICacheProvider cacheProvider)
-        {
-            _userService = userService;
-            _cacheProvider = cacheProvider;
-        }
-        
-        public async Task<IEnumerable<User>> GetUsersAsync()
-        {
-            return await GetCachedResponse(CacheKeys.Users, GetUsersSemaphore, () => _userService.GetUsersAsync());
-        }
+    private async Task<IReadOnlyList<User>> GetCachedResponseAsync(
+        string cacheKey,
+        SemaphoreSlim semaphore,
+        Func<Task<IReadOnlyList<User>>> valueFactory)
+    {
+        var users = await _cacheProvider.GetFromCacheAsync<IReadOnlyList<User>>(cacheKey);
+        if (users is not null) return users;
 
-        private async Task<IEnumerable<User>> GetCachedResponse(string cacheKey, SemaphoreSlim semaphore, Func<Task<IEnumerable<User>>> func)
+        await semaphore.WaitAsync();
+        try
         {
-            var users = await _cacheProvider.GetFromCache<IEnumerable<User>>(cacheKey);
+            users = await _cacheProvider.GetFromCacheAsync<IReadOnlyList<User>>(cacheKey);
+            if (users is not null) return users;
 
-            if (users != null) return users;
-            try
-            {
-                await semaphore.WaitAsync();
-                
-                // Recheck to make sure it didn't populate before entering semaphore
-                users = await _cacheProvider.GetFromCache<IEnumerable<User>>(cacheKey);
-                if (users != null) return users;
-                
-                users = await func();
-                
-                var cacheEntryOptions = new DistributedCacheEntryOptions()
-                    .SetSlidingExpiration(TimeSpan.FromSeconds(CacheTimeToLive)); 
-                
-                await _cacheProvider.SetCache(cacheKey, users, cacheEntryOptions);
-            }
-            finally
-            {
-                semaphore.Release();
-            }
+            users = await valueFactory();
+            var cacheEntryOptions = new DistributedCacheEntryOptions()
+                .SetSlidingExpiration(TimeSpan.FromSeconds(CacheTimeToLiveInSeconds));
+            await _cacheProvider.SetCacheAsync(cacheKey, users, cacheEntryOptions);
 
             return users;
+        }
+        finally
+        {
+            semaphore.Release();
         }
     }
 }

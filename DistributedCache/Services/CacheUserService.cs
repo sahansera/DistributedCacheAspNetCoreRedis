@@ -1,39 +1,30 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using DistributedCache.Infrastructure;
 using DistributedCache.Models;
 
-namespace DistributedCache.Services
+namespace DistributedCache.Services;
+
+public interface ICacheUserService
 {
-    
-    public interface ICacheUserService
+    Task<IReadOnlyList<User>> GetCachedUserAsync();
+    Task ClearCacheAsync();
+}
+
+public static class CacheKeys
+{
+    public const string Users = "users";
+}
+
+public class CacheUserService(ICacheProvider cacheProvider) : ICacheUserService
+{
+    private readonly ICacheProvider _cacheProvider = cacheProvider;
+
+    public async Task<IReadOnlyList<User>> GetCachedUserAsync()
     {
-        Task<IEnumerable<User>> GetCachedUser();
-        Task ClearCache();
+        return await _cacheProvider.GetFromCacheAsync<IReadOnlyList<User>>(CacheKeys.Users) ?? [];
     }
 
-    public static class CacheKeys
+    public Task ClearCacheAsync()
     {
-        public static string Users => "_Users";
-    }
-    
-    public class CacheUserService : ICacheUserService
-    {
-        private readonly ICacheProvider _cacheProvider;
-
-        public CacheUserService(ICacheProvider cacheProvider)
-        {
-            _cacheProvider = cacheProvider;
-        }
-
-        public async Task<IEnumerable<User>> GetCachedUser()
-        {
-            return await _cacheProvider.GetFromCache<IEnumerable<User>>(CacheKeys.Users);
-        }
-
-        public async Task ClearCache()
-        {
-            await _cacheProvider.ClearCache(CacheKeys.Users);
-        }
+        return _cacheProvider.ClearCacheAsync(CacheKeys.Users);
     }
 }

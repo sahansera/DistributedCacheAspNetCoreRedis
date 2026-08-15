@@ -1,28 +1,19 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using DistributedCache.Infrastructure;
 using DistributedCache.Models;
 
-namespace DistributedCache.Services
+namespace DistributedCache.Services;
+
+public interface IUserService
 {
-    
-    public interface IUserService
-    {
-        Task<IEnumerable<User>>GetUsersAsync();
-    }
-    
-    public class UserService : IUserService
-    {
-        private readonly IHttpClient _httpClient;
+    Task<IReadOnlyList<User>> GetUsersAsync();
+}
 
-        public UserService(IHttpClient httpClient)
-        {
-            _httpClient = httpClient;
-        }
+public class UserService(IUsersApiClient usersApiClient) : IUserService
+{
+    private readonly IUsersApiClient _usersApiClient = usersApiClient;
 
-        public Task<IEnumerable<User>> GetUsersAsync()
-        {
-            return _httpClient.Get();
-        }
+    public Task<IReadOnlyList<User>> GetUsersAsync()
+    {
+        return _usersApiClient.GetUsersAsync();
     }
 }

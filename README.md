@@ -6,11 +6,11 @@
 
 ## Intro 👋
 
-This project leverages the IDistributedCache that's shipped as part of .NET/.NET Core SDKs to achieve distributed caching in a microservices environment. If you are looking for a monolithing caching approach, then, my [other project](https://github.com/sahansera/InMemoryCacheNetCore) would be more suitable for you.
+This project uses ASP.NET Core's `IDistributedCache` abstraction with Redis to share cached data between application instances. If you only need a cache inside one application process, my [in-memory caching project](https://github.com/sahansera/InMemoryCacheNetCore) is a better starting point.
 
 I've also [blogged](https://sahansera.dev/distributed-caching-aspnet-core-redis/) this with a full explanation of how this is achieved.
 
-> Note: I have recently migrated this project to .NET 6 and also a docker-compose.yaml for better dev experience 🎉 You can still access the old version from the [.NET 5 branch](https://github.com/sahansera/DistributedCacheAspNetCoreRedis/tree/dotnet5) in this repo. 
+`main` targets .NET 10 LTS. The unsupported .NET 5 version remains available on the [`dotnet5` branch](https://github.com/sahansera/DistributedCacheAspNetCoreRedis/tree/dotnet5) for historical reference.
 
 ## Architecture 🏗
 
@@ -26,10 +26,27 @@ I've also [blogged](https://sahansera.dev/distributed-caching-aspnet-core-redis/
 
 ## Usage 🚀
 
-Open up a terminal and run the following:
+Requirements:
+
+- .NET 10 SDK
+- Docker with Docker Compose
+
+Start Redis:
 
 ```sh
-docker-compose up and dotnet run
+docker compose up -d
+```
+
+Run the application:
+
+```sh
+dotnet run --project DistributedCache/DistributedCache.csproj
+```
+
+Build and test the solution:
+
+```sh
+dotnet test
 ```
 
 ## Questions? Bugs? Suggestions for Improvement? ❓

@@ -1,41 +1,37 @@
 using System.Text.Json;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
 
-namespace DistributedCache.Infrastructure
+namespace DistributedCache.Infrastructure;
+
+public interface ICacheProvider
 {
-    
-    public interface ICacheProvider
+    Task<T?> GetFromCacheAsync<T>(string key) where T : class;
+    Task SetCacheAsync<T>(string key, T value, DistributedCacheEntryOptions options)
+        where T : class;
+    Task ClearCacheAsync(string key);
+}
+
+public class CacheProvider(IDistributedCache cache) : ICacheProvider
+{
+    private readonly IDistributedCache _cache = cache;
+
+    public async Task<T?> GetFromCacheAsync<T>(string key) where T : class
     {
-        Task<T> GetFromCache<T>(string key) where T : class;
-        Task SetCache<T>(string key, T value, DistributedCacheEntryOptions options) where T : class;
-        Task ClearCache(string key);
+        var cachedValue = await _cache.GetStringAsync(key);
+        return cachedValue is null ? null : JsonSerializer.Deserialize<T>(cachedValue);
     }
-    
-    public class CacheProvider : ICacheProvider
+
+    public Task SetCacheAsync<T>(
+        string key,
+        T value,
+        DistributedCacheEntryOptions options) where T : class
     {
-        private readonly IDistributedCache _cache;
+        var serializedValue = JsonSerializer.Serialize(value);
+        return _cache.SetStringAsync(key, serializedValue, options);
+    }
 
-        public CacheProvider(IDistributedCache cache)
-        {
-            _cache = cache;
-        }
-        
-        public async Task<T> GetFromCache<T>(string key) where T : class
-        {
-            var cachedUsers = await _cache.GetStringAsync(key);
-            return cachedUsers == null ? null : JsonSerializer.Deserialize<T>(cachedUsers);
-        }
-
-        public async Task SetCache<T>(string key, T value, DistributedCacheEntryOptions options) where T : class
-        {
-            var users = JsonSerializer.Serialize(value);
-            await _cache.SetStringAsync(key, users , options);
-        }
-
-        public async Task ClearCache(string key)
-        {
-            await _cache.RemoveAsync(key);
-        }
+    public Task ClearCacheAsync(string key)
+    {
+        return _cache.RemoveAsync(key);
     }
 }
